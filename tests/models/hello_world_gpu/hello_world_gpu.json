@@ -1,0 +1,5 @@
+{"container_tag": "hello-world",
+  "human_readable_id": "hello_world",
+  "use_gpu": true,
+  "model_available": false,
+  "description": "Run hello world"}
