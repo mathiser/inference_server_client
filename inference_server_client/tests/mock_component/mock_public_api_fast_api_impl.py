@@ -2,14 +2,14 @@ import logging
 import os
 import random
 import secrets
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 from urllib.parse import urljoin
 
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from models import Model, Task
+from public_client.models import Model, Task
 
 threads = []
 

@@ -1,0 +1,3 @@
+[console_scripts]
+infer_cli = inference_server_client.main:main
+

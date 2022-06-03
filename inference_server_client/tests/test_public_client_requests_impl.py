@@ -4,11 +4,12 @@ import unittest
 
 import dotenv
 
-from models import Model, Task
+from public_client.models import Model, Task
 from public_client.public_client_impl import PublicClient
 from tests.mock_component.mock_fast_api_testclient import MockClientBackend
 from tests.mock_component.mock_public_api_fast_api_impl import PublicFastAPI
 
+from public_client.models import model_loader
 
 dotenv.load_dotenv()
 class TestPublicClientRequestsImpl(unittest.TestCase):
@@ -16,12 +17,10 @@ class TestPublicClientRequestsImpl(unittest.TestCase):
         self.client_backend = MockClientBackend(PublicFastAPI())
         self.client = PublicClient(self.client_backend)
         self.hello_world_model_path = "tests/models/hello_world/hello_world.json"
-        with open(self.hello_world_model_path) as r:
-            self.hello_world_model = Model(**json.loads(r.read()))
+        self.hello_world_model = model_loader(self.hello_world_model_path)
 
         self.task = Task(model_human_readable_id=self.hello_world_model.human_readable_id,
-                         input_path=os.path.dirname(self.hello_world_model_path),
-                         )
+                         input_zip_path=os.path.dirname(self.hello_world_model_path))
 
     def test_post_task(self):
         echo = self.client.post_task(self.task)

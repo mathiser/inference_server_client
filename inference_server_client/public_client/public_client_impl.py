@@ -1,17 +1,14 @@
 import json
-import os
-from pprint import pprint
 from urllib.parse import urljoin
 
-from client_backend.client_backend_interface import ClientBackendInterface
-from models import Model, Task
-from public_client.public_client_interface import PublicClientInterface
+from inference_server_client.client_backend.client_backend_interface import ClientBackendInterface
+from inference_server_client.public_client.models import Model, Task
+from inference_server_client.public_client.public_client_interface import PublicClientInterface
 
 
 class PublicClient(PublicClientInterface):
-    def __init__(self, client: ClientBackendInterface):
-        super().__init__(client)
-        self.client = client
+    def __init__(self, client_backend: ClientBackendInterface):
+        self.client = client_backend
 
     def get_hello_world(self):
         return self.client.get("/")
@@ -41,12 +38,12 @@ class PublicClient(PublicClientInterface):
             return res
 
     def post_model(self, model: Model):
-        if model.model_path:
+        if model.model_available:
+            assert model.relative_zip_file_path, model.model_mountpoint
             with model.get_zip() as zip:
                 res = self.client.post("/api/models",
                                        params=model.to_params(),
-                                       files={"zip_file": zip}
-                                       )
+                                       files={"zip_file": zip})
         else:
             res = self.client.post("/api/models",
                                    params=model.to_params())
@@ -59,7 +56,4 @@ class PublicClient(PublicClientInterface):
     def get_models(self):
         res = self.client.get("/api/models")
         models = [Model(**model) for model in json.loads(res.content)]
-        pprint("Unarsed models {}".format(res.content))
-        pprint("Parsed models {}".format(models))
-
         return models

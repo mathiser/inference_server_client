@@ -1,14 +1,13 @@
 import datetime
-import json
 import os.path
 import unittest
 from pprint import pprint
 
 import dotenv
 
-from client_backend.client_backend_requests_impl import ClientBackendRequestsImpl
-from models import Model, Task
-from public_client.public_client_impl import PublicClient
+from inference_server_client.client_backend.client_backend_requests_impl import ClientBackendRequestsImpl
+from inference_server_client.public_client import Model, Task
+from inference_server_client.public_client.public_client_impl import PublicClient
 
 dotenv.load_dotenv()
 

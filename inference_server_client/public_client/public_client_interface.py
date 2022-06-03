@@ -1,13 +1,10 @@
 from abc import abstractmethod
 from typing import List
 
-from client_backend.client_backend_interface import ClientBackendInterface
-from models import Model, Task
+from inference_server_client.public_client.models import Model, Task
 
 
 class PublicClientInterface:
-    def __init__(self, client: ClientBackendInterface):
-        self.client = client
 
     @abstractmethod
     def get_output_zip_by_uid(self, uid: str, dst) -> Task:
