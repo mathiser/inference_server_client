@@ -41,7 +41,7 @@ class Model(ClientModel):
     output_mountpoint: str = None
     model_mountpoint: str = None
     description: str = None
-    relative_zip_file_path: str = None
+    zip_file_path: str = None
 
 
     def to_params(self):

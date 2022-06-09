@@ -24,7 +24,7 @@ def main():
     args = parser.parse_args()
     method = args.method
     input_json = args.input_json
-    output_folder = args.output_folder
+    output_zip_path = args.output_zip_path
     base_url = args.base_url
     cert_file = args.cert_file
     model_human_readable_id = args.model_human_readable_id
@@ -45,7 +45,7 @@ def main():
             assert model_human_readable_id, zip_file_path
             task = Task(model_human_readable_id=model_human_readable_id,
                         zip_file_path=zip_file_path)
-            print(client.post_task(task)["uid"])
+            print(client.post_task(task))
 
     elif method == "post_model":
         assert input_json
@@ -56,8 +56,8 @@ def main():
         print(client.get_models())
 
     elif method == "get_task":
-        assert task_uid, output_folder
-        print(client.get_output_zip_by_uid(task_uid, output_folder))
+        assert task_uid, output_zip_path
+        print(client.get_output_zip_by_uid(task_uid, output_zip_path))
 
     else:
         print(f"Wrong method")

@@ -1,4 +1,5 @@
 import json
+import os
 from urllib.parse import urljoin
 
 from inference_server_client.client_backend.client_backend_interface import ClientBackendInterface
@@ -14,7 +15,7 @@ class PublicClient(PublicClientInterface):
         return self.client.get("/")
 
     def get_output_zip_by_uid(self, uid, dst):
-        res = self.client.get(urljoin("/api/tasks/", uid),
+        res = self.client.get("/api/tasks/" + uid,
                               stream=True)
         if res.ok:
             with open(dst, "wb") as f:
@@ -27,7 +28,7 @@ class PublicClient(PublicClientInterface):
 
     def post_task(self, task: Task):
         with task.get_zip() as zip:
-            res = self.client.post("/api/tasks",
+            res = self.client.post("/api/tasks/",
                                    params=task.to_params(),
                                    files={"zip_file": zip}
                                    )
@@ -39,13 +40,13 @@ class PublicClient(PublicClientInterface):
 
     def post_model(self, model: Model):
         if model.model_available:
-            assert model.relative_zip_file_path, model.model_mountpoint
+            assert model.zip_file_path, model.model_mountpoint
             with model.get_zip() as zip:
-                res = self.client.post("/api/models",
+                res = self.client.post("/api/models/",
                                        params=model.to_params(),
                                        files={"zip_file": zip})
         else:
-            res = self.client.post("/api/models",
+            res = self.client.post("/api/models/",
                                    params=model.to_params())
         if res.ok:
             print(res.content)
@@ -54,6 +55,6 @@ class PublicClient(PublicClientInterface):
             return res
 
     def get_models(self):
-        res = self.client.get("/api/models")
+        res = self.client.get(os.environ.get("GET_MODELS"))
         models = [Model(**model) for model in json.loads(res.content)]
         return models

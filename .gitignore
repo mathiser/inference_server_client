@@ -1,3 +1,4 @@
 inference_server_client/certs/*
 **/__pycache__/**
 **/.idea/**
+*.egg*
